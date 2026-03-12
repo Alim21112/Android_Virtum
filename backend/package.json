@@ -1,0 +1,1 @@
+{"name":"virtum-backend","version":"1.0.0","description":"Mock API for Virtum mobile app","main":"server.js","type":"module","scripts":{"start":"node server.js"},"dependencies":{"cors":"^2.8.5","express":"^5.1.0"}}

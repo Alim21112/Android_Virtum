@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/screens/login_screen.dart';
+import 'package:mobile/services/api_config.dart';
 import 'package:mobile/services/api_service.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -14,6 +15,7 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _serverUrlController = TextEditingController();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -39,7 +41,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    ApiConfig.getBaseUrl().then((url) {
+      if (mounted && url != ApiConfig.defaultBaseUrl) {
+        _serverUrlController.text = url;
+      }
+    });
+  }
+
+  @override
   void dispose() {
+    _serverUrlController.dispose();
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -48,6 +61,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
+
+    final serverUrl = _serverUrlController.text.trim();
+    if (serverUrl.isNotEmpty) {
+      await ApiConfig.setBaseUrl(serverUrl);
+    }
 
     setState(() {
       _isLoading = true;
@@ -171,6 +189,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               key: _formKey,
                               child: Column(
                                 children: [
+                                  TextFormField(
+                                    controller: _serverUrlController,
+                                    keyboardType: TextInputType.url,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Server URL (optional)',
+                                      hintText: 'e.g. 192.168.1.50:3000',
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
                                   TextFormField(
                                     controller: _nameController,
                                     decoration: const InputDecoration(

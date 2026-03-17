@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/models/user_profile.dart';
 import 'package:mobile/screens/dashboard_screen.dart';
 import 'package:mobile/screens/registration_screen.dart';
+import 'package:mobile/services/api_config.dart';
 import 'package:mobile/services/api_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _serverUrlController = TextEditingController();
   bool _isLoading = false;
   String? _error;
 
@@ -42,14 +44,30 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    ApiConfig.getBaseUrl().then((url) {
+      if (mounted && url != ApiConfig.defaultBaseUrl) {
+        _serverUrlController.text = url;
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _serverUrlController.dispose();
     super.dispose();
   }
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
+
+    final serverUrl = _serverUrlController.text.trim();
+    if (serverUrl.isNotEmpty) {
+      await ApiConfig.setBaseUrl(serverUrl);
+    }
 
     setState(() {
       _isLoading = true;
@@ -169,6 +187,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               key: _formKey,
                               child: Column(
                                 children: [
+                                  TextFormField(
+                                    controller: _serverUrlController,
+                                    keyboardType: TextInputType.url,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Server URL (optional)',
+                                      hintText: 'e.g. 192.168.1.50:3000 or http://10.0.2.2:3000',
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
                                   TextFormField(
                                     controller: _emailController,
                                     keyboardType: TextInputType.text,

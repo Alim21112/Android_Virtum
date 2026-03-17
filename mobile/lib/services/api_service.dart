@@ -3,16 +3,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mobile/models/health_metrics.dart';
 import 'package:mobile/models/user_profile.dart';
+import 'package:mobile/services/api_config.dart';
 import 'package:mobile/services/database_service.dart';
 
 class ApiService {
   ApiService._();
 
-  // Change this to your PC's local IP address (found via ipconfig)
-  // For emulator: use 10.0.2.2
-  // For real device: use your PC's IP in local network
-  // Example IP: 192.168.8.58 (Wi-Fi)
-  static const String baseUrl = 'http://172.20.10.8:3000'; // Change Here
   static const Duration _timeout = Duration(seconds: 30);
 
   static String _errorMessage(http.Response response, String fallback) {
@@ -32,6 +28,7 @@ class ApiService {
     required String email,
     required String password,
   }) async {
+    final baseUrl = await ApiConfig.getBaseUrl();
     final response = await http
         .post(
           Uri.parse('$baseUrl/auth/login'),
@@ -58,6 +55,7 @@ class ApiService {
     required String password,
   }) async {
     try {
+      final baseUrl = await ApiConfig.getBaseUrl();
       final response = await http
           .post(
             Uri.parse('$baseUrl/auth/register'),
@@ -78,6 +76,7 @@ class ApiService {
       if (e is http.ClientException) {
         throw Exception('Network error: ${e.message}');
       } else if (e.toString().contains('SocketException')) {
+        final baseUrl = await ApiConfig.getBaseUrl();
         throw Exception('Cannot connect to $baseUrl. Check if PC and Phone are on the same Wi-Fi.');
       }
       rethrow;
@@ -85,6 +84,7 @@ class ApiService {
   }
 
   static Future<HealthMetrics> fetchMetrics({required String token}) async {
+    final baseUrl = await ApiConfig.getBaseUrl();
     final response = await http
         .get(
           Uri.parse('$baseUrl/metrics'),
@@ -106,6 +106,7 @@ class ApiService {
     required String token,
     required String message,
   }) async {
+    final baseUrl = await ApiConfig.getBaseUrl();
     final response = await http
         .post(
           Uri.parse('$baseUrl/chat'),

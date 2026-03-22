@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" role="img" aria-label="Virtum">
+  <defs>
+    <linearGradient id="vg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0071e3"/>
+      <stop offset="100%" stop-color="#005bb5"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="8" width="48" height="48" rx="14" fill="url(#vg)"/>
+  <path d="M18 40 V22 M28 40 V22 M38 40 V22" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="28" cy="18" r="4" fill="#ffffff"/>
+  <text x="64" y="44" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="32" font-weight="700" fill="#1d1d1f">Virtum</text>
+</svg>

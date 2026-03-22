@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/theme/virtum_theme.dart';
 
 class MetricCard extends StatelessWidget {
   const MetricCard({
@@ -7,12 +8,18 @@ class MetricCard extends StatelessWidget {
     required this.value,
     required this.unit,
     required this.icon,
+    this.trend,
+    this.statusLabel,
+    this.footer,
   });
 
   final String title;
   final String value;
   final String unit;
   final IconData icon;
+  final String? trend;
+  final String? statusLabel;
+  final String? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -31,27 +38,35 @@ class MetricCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFF5F7FA), Color(0xFFC3CFE2)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
-            ),
-          ],
+          color: VirtumColors.surface,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: VirtumColors.lineSoft),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(icon, color: const Color(0xFF667EEA)),
+            SizedBox(
+              height: 28,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Icon(icon, color: VirtumColors.accent),
+                  if (trend != null)
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Text(
+                        trend!,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                ],
+              ),
+            ),
             const SizedBox(height: 10),
             Text(
               title,
+              textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
                   .labelLarge
@@ -63,7 +78,7 @@ class MetricCard extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .headlineSmall
-                    ?.copyWith(color: const Color(0xFF667EEA)),
+                    ?.copyWith(color: VirtumColors.accent),
                 children: [
                   TextSpan(text: value),
                   TextSpan(
@@ -76,6 +91,29 @@ class MetricCard extends StatelessWidget {
                 ],
               ),
             ),
+            if (statusLabel != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                statusLabel!,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: VirtumColors.textMuted,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ],
+            if (footer != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                footer!,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: VirtumColors.textMuted,
+                      fontSize: 10,
+                    ),
+              ),
+            ],
           ],
         ),
       ),

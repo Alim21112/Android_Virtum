@@ -1,3 +1,11 @@
+# Dependencies (large; restore with npm install)
 node_modules/
-backend/node_modules/
+
+# Backend — локально; на Replit: Secrets в панели + своя БД на диске
+backend/.env
 backend/virtum.db
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

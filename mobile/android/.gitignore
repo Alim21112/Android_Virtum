@@ -1,14 +1,14 @@
-gradle-wrapper.jar
-/.gradle
-/captures/
-/gradlew
-/gradlew.bat
-/local.properties
-GeneratedPluginRegistrant.java
+# Gradle — кэш и сборки (тяжело; `./gradlew` остаётся в репо)
+.gradle/
+**/local.properties
+**/captures/
 .cxx/
+**/build/
 
-# Remember to never publicly share your keystore.
-# See https://flutter.dev/to/reference-keystore
+# Подпись релиза — не коммитить
 key.properties
 **/*.keystore
 **/*.jks
+
+# Регенерируется Flutter
+GeneratedPluginRegistrant.java

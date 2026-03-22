@@ -1,4 +1,11 @@
 /// API base URL without trailing slash (no `/api` suffix — [ApiService] adds `/api/...`).
+///
+/// **Android Emulator → компьютер с бэкендом:** из эмулятора «localhost» ПК — это
+/// **не** `127.0.0.1`, а фиксированный адрес **`10.0.2.2`** (alias на loopback хоста).
+/// Пример при бэкенде на этом же ПК и порте 5001: `http://10.0.2.2:5001`
+/// (порт возьмите из `backend` / `PORT` в `.env`).
+///
+/// UptimeRobot (пинг «не уснул»): URL монитора = ваш Replit origin + `/api/health`, HTTPS.
 class ApiConfig {
   ApiConfig._();
 

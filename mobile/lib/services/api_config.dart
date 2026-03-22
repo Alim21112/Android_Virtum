@@ -2,8 +2,8 @@
 class ApiConfig {
   ApiConfig._();
 
-  /// Replace with your deployed backend URL before release (e.g. `https://....replit.dev`).
-  static const String defaultBaseUrl = 'https://YOUR_REPLIT_URL.replit.dev';
+  /// Production Virtum API (Replit deployment).
+  static const String defaultBaseUrl = 'https://android-virtum--ayoamooo.replit.app';
 
   static Future<String> getBaseUrl() async => defaultBaseUrl;
 }

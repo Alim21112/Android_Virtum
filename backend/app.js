@@ -111,6 +111,11 @@ app.listen(PORT, HOST, () => {
     console.log('🤖 Cloud AI: ⚠️  not configured');
     console.log('   To activate, set OPENROUTER_API_KEY in backend .env');
   }
+  console.log(
+    config.FIREBASE_ENABLED
+      ? '🔥 Firebase (server): credentials loaded; Admin SDK will init on first auth request'
+      : '🔥 Firebase (server): NOT enabled — set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY, FIREBASE_WEB_API_KEY, FIREBASE_AUTH_DOMAIN, FIREBASE_APP_ID'
+  );
   try {
     const { getMailMode } = require('./mailer');
     const mode = getMailMode();

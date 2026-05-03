@@ -21,13 +21,18 @@ function getFirebaseAuth() {
   }
 
   if (!cachedAdmin.apps.length) {
-    cachedAdmin.initializeApp({
-      credential: cachedAdmin.credential.cert({
-        projectId: FIREBASE_PROJECT_ID,
-        clientEmail: FIREBASE_CLIENT_EMAIL,
-        privateKey: FIREBASE_PRIVATE_KEY
-      })
-    });
+    try {
+      cachedAdmin.initializeApp({
+        credential: cachedAdmin.credential.cert({
+          projectId: FIREBASE_PROJECT_ID,
+          clientEmail: FIREBASE_CLIENT_EMAIL,
+          privateKey: FIREBASE_PRIVATE_KEY
+        })
+      });
+    } catch (err) {
+      console.error('Firebase Admin initializeApp failed:', err.message);
+      throw err;
+    }
   }
 
   cachedAuth = cachedAdmin.auth();

@@ -124,7 +124,8 @@ router.post('/firebase-register-profile', async (req, res) => {
       [userId, username, email, hash, salt, claims.email_verified ? 1 : 0]
     );
     return res.json({ success: true });
-  } catch {
+  } catch (err) {
+    console.error('firebase-register-profile:', err.message);
     return res.status(500).json({ error: 'Failed to save Firebase profile' });
   }
 });
@@ -160,7 +161,8 @@ router.post('/login-firebase', async (req, res) => {
 
     const token = issueToken(user);
     return res.json({ success: true, token, user });
-  } catch {
+  } catch (err) {
+    console.error('login-firebase:', err.message);
     return res.status(401).json({ error: 'Firebase login failed' });
   }
 });

@@ -1,8 +1,9 @@
 /**
  * Central config — load first to avoid circular deps (app ↔ utils).
  */
+const path = require('path');
 try {
-  require('dotenv').config();
+  require('dotenv').config({ path: path.join(__dirname, '.env') });
 } catch (e) {
   // optional
 }

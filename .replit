@@ -36,4 +36,4 @@ externalPort = 80
 
 [deployment]
 deploymentTarget = "autoscale"
-run = ["node", "backend/app.js"]
+run = ["bash", "-c", "cd backend && node app.js"]

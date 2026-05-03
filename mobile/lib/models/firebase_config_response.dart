@@ -25,14 +25,16 @@ class FirebaseConfigResponse {
       messagingSenderId.isNotEmpty;
 
   factory FirebaseConfigResponse.fromJson(Map<String, dynamic> json) {
+    String s(dynamic v) => v == null ? '' : v.toString();
+
     return FirebaseConfigResponse(
       enabled: json['enabled'] == true,
-      apiKey: json['apiKey'] as String? ?? '',
-      authDomain: json['authDomain'] as String? ?? '',
-      appId: json['appId'] as String? ?? '',
-      projectId: json['projectId'] as String? ?? '',
-      messagingSenderId: json['messagingSenderId'] as String? ?? '',
-      storageBucket: json['storageBucket'] as String? ?? '',
+      apiKey: s(json['apiKey']),
+      authDomain: s(json['authDomain']),
+      appId: s(json['appId']),
+      projectId: s(json['projectId']),
+      messagingSenderId: s(json['messagingSenderId']),
+      storageBucket: s(json['storageBucket']),
     );
   }
 }

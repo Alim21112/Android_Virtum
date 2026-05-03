@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/app_state.dart';
+import 'package:mobile/bootstrap/firebase_bootstrap.dart';
 import 'package:mobile/services/api_service.dart';
 import 'package:mobile/services/session_service.dart';
 import 'package:mobile/theme/virtum_theme.dart';
@@ -26,6 +27,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       _error = null;
     });
     try {
+      await ensureFirebaseInitialized();
+
       if (FirebaseAuth.instance.currentUser == null) {
         throw Exception(
           'Сессия Firebase сброшена. Вернитесь на экран входа, войдите с тем же email и паролем — '
@@ -76,6 +79,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   Future<void> _resend() async {
     setState(() => _busy = true);
     try {
+      await ensureFirebaseInitialized();
       await FirebaseAuth.instance.currentUser?.sendEmailVerification();
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

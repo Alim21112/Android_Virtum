@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:mobile/bootstrap/firebase_bootstrap.dart';
 import 'package:mobile/models/user_profile.dart';
 import 'package:mobile/services/api_service.dart';
 import 'package:mobile/services/session_service.dart';
@@ -10,6 +12,8 @@ class AuthFlow {
     required String identifier,
     required String password,
   }) async {
+    await ensureFirebaseInitialized();
+
     final trimmed = identifier.trim();
     final email = trimmed.contains('@')
         ? trimmed.toLowerCase()
@@ -34,6 +38,8 @@ class AuthFlow {
     required String email,
     required String password,
   }) async {
+    await ensureFirebaseInitialized();
+
     final cred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email.trim(),
       password: password,
@@ -50,11 +56,14 @@ class AuthFlow {
   }
 
   static Future<void> sendPasswordReset(String email) async {
+    await ensureFirebaseInitialized();
     await FirebaseAuth.instance.sendPasswordResetEmail(email: email.trim());
   }
 
   static Future<void> signOutVirtum() async {
     await SessionService.clear();
-    await FirebaseAuth.instance.signOut();
+    if (Firebase.apps.isNotEmpty) {
+      await FirebaseAuth.instance.signOut();
+    }
   }
 }

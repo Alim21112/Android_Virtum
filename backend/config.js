@@ -21,7 +21,11 @@ const USE_OPENROUTER = OPENROUTER_API_KEY.length > 0;
 
 const JWT_SECRET = process.env.JWT_SECRET || 'virtum_secret_2026_dev_only';
 const NODE_ENV = process.env.NODE_ENV || 'development';
-const PORT = parseInt(process.env.PORT || '5001', 10);
+/** Replit / PaaS set PORT; local default 5001. Replit tooling often uses 3000 in .replit if PORT is missing. */
+const PORT = parseInt(
+  process.env.PORT || (process.env.REPL_ID || process.env.REPLIT_DEPLOYMENT ? '3000' : '5001'),
+  10
+);
 const APP_VERSION = process.env.APP_VERSION || '1.2.0';
 const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN || '';
 const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID || '';

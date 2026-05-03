@@ -1,12 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mobile/models/firebase_config_response.dart';
+import 'package:mobile/services/api_config.dart';
 import 'package:mobile/services/api_service.dart';
+
+/// Last failure from [initFirebaseFromBackend] (network, bad JSON, incomplete config, init error).
+String? firebaseBootstrapLastError;
 
 /// Loads `/api/auth/firebase-config` and initializes Firebase for the client app.
 Future<FirebaseConfigResponse?> initFirebaseFromBackend() async {
   Object? lastError;
   StackTrace? lastStack;
+  firebaseBootstrapLastError = null;
 
   for (var attempt = 0; attempt < 3; attempt++) {
     try {
@@ -16,11 +21,13 @@ Future<FirebaseConfigResponse?> initFirebaseFromBackend() async {
 
       final cfg = await ApiService.getFirebaseConfig();
       if (!cfg.canInitializeFirebase) {
+        firebaseBootstrapLastError =
+            'Backend /api/auth/firebase-config is not usable: enabled=${cfg.enabled}, '
+            'apiKeyEmpty=${cfg.apiKey.isEmpty}, appIdEmpty=${cfg.appId.isEmpty}, '
+            'projectIdEmpty=${cfg.projectId.isEmpty}, senderEmpty=${cfg.messagingSenderId.isEmpty}. '
+            'On Replit set all FIREBASE_* secrets and redeploy.';
         if (kDebugMode) {
-          debugPrint(
-            'Firebase config incomplete: enabled=${cfg.enabled} '
-            'apiKeyEmpty=${cfg.apiKey.isEmpty} appIdEmpty=${cfg.appId.isEmpty}',
-          );
+          debugPrint('Firebase config incomplete: $firebaseBootstrapLastError');
         }
         return cfg;
       }
@@ -41,10 +48,13 @@ Future<FirebaseConfigResponse?> initFirebaseFromBackend() async {
           ),
         );
       }
+      firebaseBootstrapLastError = null;
       return cfg;
     } catch (e, st) {
       lastError = e;
       lastStack = st;
+      firebaseBootstrapLastError =
+          '${ApiConfig.defaultBaseUrl}/api/auth/firebase-config — $e';
       if (kDebugMode) {
         debugPrint('initFirebaseFromBackend attempt ${attempt + 1}/3 failed: $e');
         debugPrint('$st');
@@ -66,9 +76,12 @@ Future<void> ensureFirebaseInitialized() async {
   await initFirebaseFromBackend();
 
   if (Firebase.apps.isEmpty) {
+    final detail = firebaseBootstrapLastError?.trim();
     throw Exception(
-      'Firebase did not start. Open the app again with internet, or confirm '
-      'your backend /api/auth/firebase-config returns enabled and full web client fields.',
+      detail != null && detail.isNotEmpty
+          ? detail
+          : 'Firebase did not start. Check URL ${ApiConfig.defaultBaseUrl}/api/auth/firebase-config '
+              'in a browser on the phone, Repl must be awake, and Secrets must expose full Firebase web + admin env.',
     );
   }
 }

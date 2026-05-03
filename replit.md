@@ -18,7 +18,7 @@ This is a health tracking application consisting of:
 ### Mobile (Flutter)
 - Flutter app targeting Android/iOS
 - Points to backend via `mobile/lib/services/api_config.dart`
-- Production backend URL: `https://android-virtum--2193edkasidma.replit.app`
+- Production backend URL: `https://android-virtum--ayoamooo.replit.app`
 
 ## Key Files
 

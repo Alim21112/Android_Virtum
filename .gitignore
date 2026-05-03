@@ -2,7 +2,6 @@
 node_modules/
 
 # Backend — локально; на Replit: Secrets в панели + своя БД на диске
-backend/.env
 backend/virtum.db
 *.log
 
